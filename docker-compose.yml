@@ -1,0 +1,114 @@
+version: '3'
+
+services:
+  #Eureka Server#
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - "8081:8081"
+    networks:
+      - service_network
+    healthcheck:
+      test: ["CMD", "echo", "OK"]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+#  #Company Service#
+#  company-service:
+#    build: ./company-service
+#    ports:
+#      - "8083:9000"
+#    networks:
+#      - service_network
+#    depends_on:
+#      - eureka-server
+#    healthcheck:
+#      test: ["CMD", "echo", "OK"]
+#      interval: 5s
+#      timeout: 15s
+#      retries: 3
+#      start_period: 5s
+#
+#  #Developers Service#
+#  developers-service:
+#    build: ./developers-service
+#    ports:
+#      - "8084:9000"
+#    networks:
+#      - service_network
+#    depends_on:
+#      - eureka-server
+#    healthcheck:
+#      test: ["CMD", "echo", "OK"]
+#      interval: 5s
+#      timeout: 15s
+#      retries: 3
+#      start_period: 5s
+#
+#  #Photo Service#
+#  photo-service:
+#    build: ./photo-service
+#    ports:
+#      - "8085:9000"
+#    networks:
+#      - service_network
+#    depends_on:
+#      - eureka-server
+#    healthcheck:
+#      test: ["CMD", "echo", "OK"]
+#      interval: 5s
+#      timeout: 15s
+#      retries: 3
+#      start_period: 5s
+#
+#  #Project Service#
+#  project-service:
+#    build: ./project-service
+#    ports:
+#      - "8086:9000"
+#    networks:
+#      - service_network
+#    depends_on:
+#      - eureka-server
+#    healthcheck:
+#      test: ["CMD", "echo", "OK"]
+#      interval: 5s
+#      timeout: 15s
+#      retries: 3
+#      start_period: 5s
+#
+#  #User Service#
+#  user-service:
+#    build: ./user-service
+#    ports:
+#      - "8087:9000"
+#    networks:
+#      - service_network
+#    depends_on:
+#      - eureka-server
+#    healthcheck:
+#      test: ["CMD", "echo", "OK"]
+#      interval: 5s
+#      timeout: 15s
+#      retries: 3
+#      start_period: 5s
+
+  #API Gateway#
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8082:8082"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+    healthcheck:
+      test: ["CMD", "echo", "OK"]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+networks:
+  service_network:
+    driver: bridge
