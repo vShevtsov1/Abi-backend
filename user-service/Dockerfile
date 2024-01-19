@@ -14,6 +14,6 @@ FROM openjdk:21-slim-buster
 
 COPY --from=build target/user-service-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 9000
+EXPOSE 8083
 
-ENTRYPOINT ["java", "-jar", "user-service-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "user-service-0.0.1-SNAPSHOT.jar"]

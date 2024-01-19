@@ -3,6 +3,7 @@ package com.project.projectservice.projects;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.projectservice.projects.data.DTO.filterDTO;
 import com.project.projectservice.projects.data.DTO.floorPlansDTO;
 import com.project.projectservice.projects.data.DTO.fullProjectDTO;
 import com.project.projectservice.projects.data.DTO.projectDTO;
@@ -62,10 +63,10 @@ public class projectController {
     }
 
 
-    @GetMapping("/my-team-projects")
-    public ResponseEntity<?> getMyTeamProjects(Authentication authentication){
+    @PostMapping("/my-team-projects")
+    public ResponseEntity<?> getMyTeamProjects(@RequestBody filterDTO filterDTO, Authentication authentication){
         try {
-            return new ResponseEntity<>(projectsService.getMyCompanyProjects(authentication.getPrincipal().toString()),HttpStatus.OK);
+            return new ResponseEntity<>(projectsService.getMyCompanyProjects(filterDTO,authentication.getPrincipal().toString()),HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -79,7 +80,47 @@ public class projectController {
             return new ResponseEntity<>(projectDTO,HttpStatus.OK);
         }
         catch (Exception e){
-            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/regex")
+    public ResponseEntity<?> findProjectByStartWord(@RequestParam("regex") String regex,Authentication authentication){
+        try {
+                return new ResponseEntity<>(projectsService.getProjectByStartName(regex,authentication.getPrincipal().toString()),HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+    @PostMapping("/shared")
+    public ResponseEntity<?> getSharedProjects(@RequestBody List<String> projects){
+        try {
+            return new ResponseEntity<>(projectsService.getAllSharedProjects(projects),HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/public-projects")
+    public ResponseEntity<?> getPublicProjects(@RequestBody List<String> projects){
+        try {
+
+            return new ResponseEntity<>(projectsService.getPublicProjects(projects),HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/my-team-projects-small")
+    public ResponseEntity<?> getMyTeamProjects( Authentication authentication){
+        try {
+            return new ResponseEntity<>(projectsService.getAllProjects(authentication.getPrincipal().toString()),HttpStatus.OK);
+        }
+        catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

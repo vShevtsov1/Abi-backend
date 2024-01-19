@@ -1,10 +1,14 @@
 package com.project.projectservice.projects.services;
 
+import com.project.projectservice.projects.data.DTO.filterDTO;
 import com.project.projectservice.projects.data.DTO.fullProjectDTO;
+import com.project.projectservice.projects.data.DTO.projectDTOImages;
 import com.project.projectservice.projects.data.projects;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface projectRepo extends MongoRepository<projects, String> {
 
@@ -40,5 +44,44 @@ public interface projectRepo extends MongoRepository<projects, String> {
 
     })
     fullProjectDTO customAggregation(String projectId);
+
+
+    @Aggregation(pipeline = {
+            "{$match:{ company:?0, name:{$regex:?1,$options:'i'}, priceFrom: { $gte: ?2, $lte: ?3 }, sizeFrom: { $gte: ?4, $lte:?5 }, bedrooms: { $in: ?6 }, propertyType: { $in: ?7 }} }",
+            "{$project: {name:1,coordinates:1,developer:1,priceFrom:1,location:1,ownLocation:1,handover:1,imageMain:1,company:1}}",
+            "{$set: { price: \"$priceFrom\" }}",
+            "{$set: { image: \"$imageMain\" }}",
+            "{$lookup: { " +
+                    "from: 'photo'," +
+                    "let: { imageId: { $toObjectId: '$image' } }," +
+                    "pipeline: [" +
+                    "{ $match: { $expr: { $eq: [ '$_id', '$$imageId' ] } } }," +
+                    "{ $project: { _id: 0, photo_url: 1, photo_preview: 1 } }" +
+                    "]," +
+                    "as: 'photo'" +
+                    "}}",
+            "{$project: {" +
+                    "name: 1," +
+                    "coordinates: 1," +
+                    "developer: 1," +
+                    "price: 1," +
+                    "location: 1," +
+                    "ownLocation: 1," +
+                    "handover: 1," +
+                    "image: 1," +
+                    "company: 1," +
+                    "photo: 1" +
+                    "}}"
+    })
+    List<projectDTOImages> getAllProjects(
+            String company,
+            String name,
+            Integer priceFrom,
+            Integer priceTo,
+            Integer sizeFrom,
+            Integer sizeTo,
+            List<String> bedrooms,
+            List<String> propertyType
+    );
 
 }

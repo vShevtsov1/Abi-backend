@@ -9,105 +9,145 @@ services:
     networks:
       - service_network
     healthcheck:
-      test: ["CMD", "echo", "OK"]
-      interval: 5s
-      timeout: 15s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
-#  #Company Service#
-#  company-service:
-#    build: ./company-service
-#    ports:
-#      - "8083:9000"
-#    networks:
-#      - service_network
-#    depends_on:
-#      - eureka-server
-#    healthcheck:
-#      test: ["CMD", "echo", "OK"]
-#      interval: 5s
-#      timeout: 15s
-#      retries: 3
-#      start_period: 5s
-#
-#  #Developers Service#
-#  developers-service:
-#    build: ./developers-service
-#    ports:
-#      - "8084:9000"
-#    networks:
-#      - service_network
-#    depends_on:
-#      - eureka-server
-#    healthcheck:
-#      test: ["CMD", "echo", "OK"]
-#      interval: 5s
-#      timeout: 15s
-#      retries: 3
-#      start_period: 5s
-#
-#  #Photo Service#
-#  photo-service:
-#    build: ./photo-service
-#    ports:
-#      - "8085:9000"
-#    networks:
-#      - service_network
-#    depends_on:
-#      - eureka-server
-#    healthcheck:
-#      test: ["CMD", "echo", "OK"]
-#      interval: 5s
-#      timeout: 15s
-#      retries: 3
-#      start_period: 5s
-#
-#  #Project Service#
-#  project-service:
-#    build: ./project-service
-#    ports:
-#      - "8086:9000"
-#    networks:
-#      - service_network
-#    depends_on:
-#      - eureka-server
-#    healthcheck:
-#      test: ["CMD", "echo", "OK"]
-#      interval: 5s
-#      timeout: 15s
-#      retries: 3
-#      start_period: 5s
-#
-#  #User Service#
-#  user-service:
-#    build: ./user-service
-#    ports:
-#      - "8087:9000"
-#    networks:
-#      - service_network
-#    depends_on:
-#      - eureka-server
-#    healthcheck:
-#      test: ["CMD", "echo", "OK"]
-#      interval: 5s
-#      timeout: 15s
-#      retries: 3
-#      start_period: 5s
-
-  #API Gateway#
-  api-gateway:
-    build: ./api-gateway
+  #Project Service#
+  user-service:
+    build: ./user-service
     ports:
-      - "8082:8082"
+      - "8083:8083"
     networks:
       - service_network
     depends_on:
       - eureka-server
     healthcheck:
-      test: ["CMD", "echo", "OK"]
+      test: [ "CMD", "echo", "OK" ]
       interval: 5s
       timeout: 15s
       retries: 3
+
+  #Project Service#
+  amenities-service:
+    build: ./amenities-service
+    ports:
+      - "8084:8084"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+      - user-service
+    healthcheck:
+      test: [ "CMD", "echo", "OK" ]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+
+  company-service:
+    build: ./company-service
+    ports:
+      - "6789:6789"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+      - user-service
+    healthcheck:
+      test: [ "CMD", "echo", "OK" ]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+  developers-service:
+    build: ./developers-service
+    ports:
+      - "8086:8086"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+      - user-service
+    healthcheck:
+      test: [ "CMD", "echo", "OK" ]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+  folders-service:
+    build: ./folders-service
+    ports:
+      - "8087:8087"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+      - user-service
+    healthcheck:
+      test: [ "CMD", "echo", "OK" ]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+  photo-service:
+    build: ./photo-service
+    ports:
+      - "8088:8088"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+      - company-service
+      - project-service
+    healthcheck:
+      test: [ "CMD", "echo", "OK" ]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+  project-service:
+    build: ./project-service
+    ports:
+      - "8090:8090"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+      - user-service
+    healthcheck:
+      test: [ "CMD", "echo", "OK" ]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+  saved-service:
+    build: ./saved-service
+    ports:
+      - "8091:8091"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
+      - user-service
+    healthcheck:
+      test: [ "CMD", "echo", "OK" ]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+
+
+
+  #API Gateway#
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8089:8089"
+    networks:
+      - service_network
+    depends_on:
+      - eureka-server
 
 networks:
   service_network:

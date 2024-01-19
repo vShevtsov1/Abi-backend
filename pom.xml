@@ -4,18 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.project</groupId>
+    <groupId>com.project</groupId>
     <artifactId>Abi-backend</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>eureka-server</module>
         <module>api-gateway</module>
-        <module>photo-service</module>
         <module>user-service</module>
+        <module>photo-service</module>
         <module>company-service</module>
         <module>developers-service</module>
         <module>project-service</module>
+        <module>amenities-service</module>
+        <module>folders-service</module>
+        <module>saved-service</module>
     </modules>
 
     <properties>

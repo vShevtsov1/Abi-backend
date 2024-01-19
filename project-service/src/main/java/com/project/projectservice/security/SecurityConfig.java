@@ -27,6 +27,10 @@ public class SecurityConfig  {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/photos/*").permitAll()
+                        .requestMatchers("/projects/public-projects").permitAll()
+                        .requestMatchers("/public-projects").permitAll()
+                        .requestMatchers("/project-info").permitAll()
+                        .requestMatchers("/projects/project-info").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

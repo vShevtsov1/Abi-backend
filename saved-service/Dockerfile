@@ -12,8 +12,8 @@ RUN ./mvnw -B package
 
 FROM openjdk:21-slim-buster
 
-COPY --from=build target/company-service-0.0.1-SNAPSHOT.jar .
+COPY --from=build target/saved-service-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 8085
+EXPOSE 8091
 
-ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "company-service-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "saved-service-0.0.1-SNAPSHOT.jar"]

@@ -7,6 +7,7 @@ import com.project.projectservice.projects.data.floorPlans;
 import com.project.projectservice.projects.data.projects;
 import com.project.projectservice.projects.data.projectsSmall;
 import com.project.userservice.users.data.user;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class projectsService {
@@ -72,14 +74,38 @@ public class projectsService {
         return newProjects;
     }
 
-    public List<projectDTOImages> getMyCompanyProjects(String email){
+    public List<projectDTOImages> getMyCompanyProjects(filterDTO filterDTO,String email){
         user user = userFeign.getUserByEmail(email);
-        return projectsSmallRepo.getAllProjects(user.getCompany());
+        return projectRepo.getAllProjects(user.getCompany(),filterDTO.getName(),filterDTO.getPrice().getPriceFrom(), filterDTO.getPrice().getPriceTo(),filterDTO.getSize().getSizeFrom(),filterDTO.getSize().getSizeTo(), filterDTO.getBedrooms(),filterDTO.getPropertyType());
     }
 
     public fullProjectDTO getProjectById(String id){
         return projectRepo.customAggregation(id);
     }
 
+    public List<projectNameDTO> getProjectByStartName(String startName,String email){
+        user user = userFeign.getUserByEmail(email);
+        return projectsSmallRepo.getProjectByStartName(user.getCompany(),startName);
+    }
 
+    public List<shareDTO> getAllSharedProjects(List<String> projects){
+        List<ObjectId> objectIdList = projects.stream()
+                .map(ObjectId::new)
+                .collect(Collectors.toList());
+
+        return projectsSmallRepo.getSharedProjects(objectIdList);
+    }
+
+    public List<smallProjectDTO> getPublicProjects(List<String> projects){
+        List<ObjectId> objectIdList = projects.stream()
+                .map(ObjectId::new)
+                .collect(Collectors.toList());
+
+        return projectsSmallRepo.getPublicProjects(objectIdList);
+    }
+
+    public  List<projectDTOImages> getAllProjects(String email){
+        user user = userFeign.getUserByEmail(email);
+        return projectsSmallRepo.getAllProjects(user.getCompany());
+    }
 }

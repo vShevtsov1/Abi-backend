@@ -14,6 +14,6 @@ FROM openjdk:21-slim-buster
 
 COPY --from=build target/photo-service-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 9000
+EXPOSE 8088
 
-ENTRYPOINT ["java", "-jar", "photo-service-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "photo-service-0.0.1-SNAPSHOT.jar"]
