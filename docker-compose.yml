@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   #Eureka Server#
@@ -24,7 +24,7 @@ services:
     depends_on:
       - eureka-server
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
@@ -40,11 +40,10 @@ services:
       - eureka-server
       - user-service
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
-
 
   company-service:
     build: ./company-service
@@ -56,13 +55,14 @@ services:
       - eureka-server
       - user-service
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
 
   developers-service:
-    build: ./developers-service
+    build:
+      dockerfile: ./Dockerfile-developers
     ports:
       - "8086:8086"
     networks:
@@ -71,13 +71,14 @@ services:
       - eureka-server
       - user-service
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
 
   folders-service:
-    build: ./folders-service
+    build:
+      dockerfile: ./Dockerfile-folders
     ports:
       - "8087:8087"
     networks:
@@ -86,13 +87,14 @@ services:
       - eureka-server
       - user-service
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
 
   photo-service:
-    build: ./photo-service
+    build:
+      dockerfile: ./Dockerfile-photo
     ports:
       - "8088:8088"
     networks:
@@ -102,13 +104,14 @@ services:
       - company-service
       - project-service
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
 
   project-service:
-    build: ./project-service
+    build:
+      dockerfile: ./Dockerfile-project
     ports:
       - "8090:8090"
     networks:
@@ -117,13 +120,14 @@ services:
       - eureka-server
       - user-service
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
 
   saved-service:
-    build: ./saved-service
+    build:
+      dockerfile: ./Dockerfile-saved
     ports:
       - "8091:8091"
     networks:
@@ -132,12 +136,10 @@ services:
       - eureka-server
       - user-service
     healthcheck:
-      test: [ "CMD", "echo", "OK" ]
+      test: ["CMD", "echo", "OK"]
       interval: 5s
       timeout: 15s
       retries: 3
-
-
 
   #API Gateway#
   api-gateway:

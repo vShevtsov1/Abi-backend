@@ -1,0 +1,36 @@
+FROM openjdk:21-slim-buster as user
+
+WORKDIR /apps
+
+COPY ./user-service .
+
+RUN chmod 777 ./mvnw
+# RUN ./mvnw -B dependency:go-offline
+
+# RUN ./mvnw -B package
+RUN ./mvnw clean install
+
+FROM openjdk:21-slim-buster as build
+
+WORKDIR /folders-service
+
+COPY --from=user /root/.m2 /root/.m2
+
+COPY ./folders-service/.mvn .mvn
+COPY ./folders-service/mvnw .
+COPY ./folders-service/pom.xml .
+
+RUN chmod 777 ./mvnw
+RUN ./mvnw -B dependency:go-offline
+
+COPY ./folders-service/src src
+
+RUN ./mvnw -B package
+
+FROM openjdk:21-slim-buster
+
+COPY --from=build /folders-service/target/folders-service-0.0.1-SNAPSHOT.jar .
+
+EXPOSE 8087
+
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "folders-service-0.0.1-SNAPSHOT.jar"]

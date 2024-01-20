@@ -1,0 +1,36 @@
+FROM openjdk:21-slim-buster as user
+
+WORKDIR /apps
+
+COPY ./user-service .
+
+RUN chmod 777 ./mvnw
+# RUN ./mvnw -B dependency:go-offline
+
+# RUN ./mvnw -B package
+RUN ./mvnw clean install
+
+FROM openjdk:21-slim-buster as build
+
+WORKDIR /project-service
+
+COPY --from=user /root/.m2 /root/.m2
+
+COPY ./project-service/.mvn .mvn
+COPY ./project-service/mvnw .
+COPY ./project-service/pom.xml .
+
+RUN chmod 777 ./mvnw
+RUN ./mvnw -B dependency:go-offline
+
+COPY ./project-service/src src
+
+RUN ./mvnw -B package
+
+FROM openjdk:21-slim-buster
+
+COPY --from=build /project-service/target/project-service-0.0.1-SNAPSHOT.jar .
+
+EXPOSE 8090
+
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod", "project-service-0.0.1-SNAPSHOT.jar"]
